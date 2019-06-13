@@ -1,0 +1,7 @@
+[package]
+name = "ray-tracing"
+version = "0.1.0"
+authors = ["Konstantin Nisht <zeron.n1@yandex.ru>"]
+edition = "2018"
+
+[dependencies]
