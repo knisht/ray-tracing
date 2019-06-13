@@ -159,3 +159,10 @@ impl ops::Mul<f32> for &Vec3 {
     }
 }
 
+impl ops::MulAssign<f32> for Vec3 {
+    fn mul_assign(&mut self, rhs: f32) {
+        self.0 *= rhs;
+        self.1 *= rhs;
+        self.2 *= rhs;
+    }
+}

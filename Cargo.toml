@@ -5,3 +5,4 @@ authors = ["Konstantin Nisht <zeron.n1@yandex.ru>"]
 edition = "2018"
 
 [dependencies]
+rand = "0.6.5"
