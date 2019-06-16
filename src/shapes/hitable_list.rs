@@ -10,12 +10,10 @@ pub struct HittableList<'a> {
 impl Hit for HittableList<'_> {
 
     fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
-        let mut hit_anything = false;
         let mut closest = t_max;
         let mut result  = None;
         for hittable in &self.list {
             if let Some(record) = hittable.hit(ray, t_min, closest) {
-                    hit_anything = true;
                     closest = record.t;
                     result = Some(record)
             }

@@ -4,3 +4,4 @@ pub use hit_record::HitRecord;
 pub use hit_record::Hit;
 pub use camera::Camera;
 use crate::math;
+use crate::material;
