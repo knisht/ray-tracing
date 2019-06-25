@@ -5,7 +5,7 @@ use rand::Rng;
 
 use math::{Ray, Vec3};
 
-use crate::material::{Lambertian, Metal};
+use crate::material::{Lambertian, Metal, Dielectric};
 use crate::shapes::{HittableList, Sphere};
 use crate::world::{Camera, Hit};
 
@@ -57,8 +57,9 @@ fn main() {
     let s1 = Sphere { center: Vec3(0., 0., -1.), radius: 0.5, material: &Lambertian::new(Vec3(0.8, 0.3, 0.3)) };
     let s2 = Sphere { center: Vec3(0., -100.5, -1.), radius: 100., material: &Lambertian::new(Vec3(0.8, 0.8, 0.)) };
     let s3 = Sphere { center: Vec3(1., 0., -1.), radius: 0.5, material: &Metal::new(Vec3(0.8, 0.6, 0.2), 0.3) };
-    let s4 = Sphere { center: Vec3(-1., 0., -1.), radius: 0.5, material: &Metal::new(Vec3(0.8, 0.8, 0.8), 1.) };
-    let hits = HittableList { list: vec![&s1, &s2, &s3, &s4] };
+    let s4 = Sphere { center: Vec3(-1., 0., -1.), radius: 0.5, material: &Dielectric::new(1.5) };
+    let s5 = Sphere { center: Vec3(-1., 0., -1.), radius: -0.45, material: &Dielectric::new(1.5)};
+    let hits = HittableList { list: vec![&s1, &s2, &s3, &s4, &s5] };
     let camera = Camera::new();
     let mut rng = rand::thread_rng();
 
