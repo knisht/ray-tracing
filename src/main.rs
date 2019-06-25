@@ -1,10 +1,11 @@
 extern crate rand;
 
+
 use rand::Rng;
 
 use math::{Ray, Vec3};
 
-use crate::material::{Dielectric, Lambertian, Metal};
+use crate::material::{Dielectric, Lambertian, Material, Metal};
 use crate::shapes::{HittableList, Sphere};
 use crate::world::{Camera, Hit};
 
@@ -35,18 +36,47 @@ fn color(ray: &Ray, hittable: &Hit, depth: i32) -> Vec3 {
 }
 
 
+fn random_scene(range: i32) -> HittableList {
+    let mut chooser = rand::thread_rng();
+    let mut list = HittableList { list: vec![] };
+    list.list.push(Box::new(Sphere { center: Vec3(0., -1000., 0.), radius: 1000., material: Box::new(Lambertian::new(Vec3(0.5, 0.8, 0.5)))}));
+    for a in -range..range {
+        for b in -range..range {
+            let choice = chooser.gen_range(0, 3);
+            let center = Vec3(a as f32 + 0.9 * chooser.gen_range(0., 1.), 0.2, b as f32 + 0.9 * chooser.gen_range(0., 1.));
+            if (&center - Vec3(4., 0.2, 0.)).norm() > 0.9 {
+                let material: Box<dyn Material> = match choice {
+                    0 => Box::new(Lambertian::new(Vec3(chooser.gen_range(0., 1.), chooser.gen_range(0., 1.), chooser.gen_range(0., 1.)))),
+                    1 => Box::new(Metal::new(Vec3((chooser.gen_range(0., 1.) + 1.) / 2., (chooser.gen_range(0., 1.) + 1.) / 2., (chooser.gen_range(0., 1.) + 1.) / 2.), 0.)),
+                    2 => Box::new(Dielectric::new(1.5)),
+                    _otherwise => unreachable!()
+                };
+                list.list.push(Box::new(Sphere {
+                    center,
+                    radius: 0.2,
+                    material,
+                }))
+            }
+        }
+    }
+    list.list.push(Box::new(Sphere { center: Vec3(0., 1., 0.), radius: 1., material: Box::new(Dielectric::new(1.5)) }));
+    list.list.push(Box::new(Sphere { center: Vec3(-4., 1., 0.), radius: 1., material: Box::new(Lambertian::new(Vec3(0.4, 0.2, 0.1))) }));
+    list.list.push(Box::new(Sphere { center: Vec3(4., 1., 0.), radius: 1., material: Box::new(Metal::new(Vec3(0.7, 0.6, 0.5), 0.)) }));
+    list
+}
+
+
 fn main() {
-    let nx = 200;
-    let ny = 100;
-    let ns = 100;
+    let nx = 2048;
+    let ny = 1024;
+    let ns = 3;
     println!("P3\n{} {}\n255", nx, ny);
-    let camera = Camera::new(Vec3(-2., 2., 1.), Vec3(0., 0., -1.), Vec3(0., 1., 0.), 20., nx as f32 / ny as f32);
-    let s1 = Sphere { center: Vec3(0., 0., -1.), radius: 0.5, material: &Lambertian::new(Vec3(0.8, 0.3, 0.3)) };
-    let s2 = Sphere { center: Vec3(0., -100.5, -1.), radius: 100., material: &Lambertian::new(Vec3(0.8, 0.8, 0.)) };
-    let s3 = Sphere { center: Vec3(1., 0., -1.), radius: 0.5, material: &Metal::new(Vec3(0.8, 0.6, 0.2), 0.3) };
-    let s4 = Sphere { center: Vec3(-1., 0., -1.), radius: 0.5, material: &Dielectric::new(1.5) };
-    let s5 = Sphere { center: Vec3(-1., 0., -1.), radius: -0.45, material: &Dielectric::new(1.5) };
-    let hits = HittableList { list: vec![&s1, &s2, &s3, &s4, &s5] };
+    let look_from = Vec3(11., 3., 7.);
+    let look_at = Vec3(0., 0., -1.);
+    let focus_dist = (&look_from - &look_at).norm();
+    let aperture = 0.1;
+    let camera = Camera::new(look_from, look_at, Vec3(0., 1., 0.), 20., nx as f32 / ny as f32, aperture, focus_dist);
+    let hits = random_scene(4);
     let mut rng = rand::thread_rng();
 
     for j in (0..ny).rev() {

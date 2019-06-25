@@ -3,11 +3,11 @@ use super::math::Ray;
 
 
 
-pub struct HittableList<'a> {
-    pub list: Vec<&'a dyn Hit>
+pub struct HittableList {
+    pub list: Vec<Box<dyn Hit>>
 }
 
-impl Hit for HittableList<'_> {
+impl Hit for HittableList {
 
     fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         let mut closest = t_max;
