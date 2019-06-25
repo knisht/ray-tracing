@@ -1,10 +1,8 @@
-use std::cmp::min;
 use rand::random;
 
-use super::{random_in_normalized_sphere, reflect, refract, schlick};
+use super::{reflect, refract, schlick};
 use super::Material;
 use super::math::{Ray, Vec3};
-
 
 pub struct Dielectric {
     ref_index: f32,
@@ -35,9 +33,9 @@ impl Material for Dielectric {
                 } else {
                     refracted
                 }
-            },
+            }
             None => reflected
         };
-        Some((attenuation, Ray { origin: point.clone(), direction}))
+        Some((attenuation, Ray { origin: point.clone(), direction }))
     }
 }

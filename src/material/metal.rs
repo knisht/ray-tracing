@@ -1,5 +1,3 @@
-use std::cmp::min;
-
 use super::Material;
 use super::{random_in_normalized_sphere, reflect};
 use super::math::{Ray, Vec3};
