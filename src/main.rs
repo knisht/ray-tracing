@@ -67,9 +67,9 @@ fn random_scene(range: i32) -> HittableList {
 
 
 fn main() {
-    let nx = 2048;
-    let ny = 1024;
-    let ns = 3;
+    let nx = 1024;
+    let ny = 512;
+    let ns = 20;
     println!("P3\n{} {}\n255", nx, ny);
     let look_from = Vec3(11., 3., 7.);
     let look_at = Vec3(0., 0., -1.);
